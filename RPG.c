@@ -532,68 +532,68 @@ void gera_itens()
 		if(i == 0)
 		{
 			strcpy(itens[i].equipamento.C1.nome, "Leather");
-			itens[i].equipamentos.C1.defesa = 3;
+			itens[i].equipamento.C1.defesa = 3;
 
 			strcpy(itens[i].equipamento.C2.nome,"Leather");
-			itens[i].equipamentos.C1.defesa = 3;
+			itens[i].equipamento.C1.defesa = 3;
 
 			strcpy(itens[i].equipamento.C3.nome, "Leather");
-			itens[i].equipamentos.C1.defesa = 3;
+			itens[i].equipamento.C1.defesa = 3;
 
 		}else if(i == 1)
 		{
 			strcpy(itens[i].equipamento.C1.nome, "Iron");
-			itens[i].equipamentos.C1.defesa = 6;
+			itens[i].equipamento.C1.defesa = 6;
 
 			strcpy(itens[i].equipamento.C2.nome, "Iron");
-			itens[i].equipamentos.C1.defesa = 6;
+			itens[i].equipamento.C1.defesa = 6;
 
 			strcpy(itens[i].equipamento.C3.nome, "Iron");
-			itens[i].equipamentos.C1.defesa = 6;
+			itens[i].equipamento.C1.defesa = 6;
 
 		}else if(i == 2)
 		{
 			strcpy(itens[i].equipamento.C1.nome, "Thorns");
-			itens[i].equipamentos.C1.defesa = 9;
+			itens[i].equipamento.C1.defesa = 9;
 
 			strcpy(itens[i].equipamento.C2.nome, "Thorns");
-			itens[i].equipamentos.C1.defesa = 9;
+			itens[i].equipamento.C1.defesa = 9;
 
 			strcpy(itens[i].equipamento.C3.nome, "Thorns");
-			itens[i].equipamentos.C1.defesa = 9;
+			itens[i].equipamento.C1.defesa = 9;
 
 		}else if(i == 3)
 		{
 			strcpy(itens[i].equipamento.C1.nome, "Black Knight");
-			itens[i].equipamentos.C1.defesa = 12;
+			itens[i].equipamento.C1.defesa = 12;
 
 			strcpy(itens[i].equipamento.C2.nome, "Black Knight");
-			itens[i].equipamentos.C1.defesa = 12;
+			itens[i].equipamento.C1.defesa = 12;
 
 			strcpy(itens[i].equipamento.C3.nome, "Black Knight");
-			itens[i].equipamentos.C1.defesa = 12;
+			itens[i].equipamento.C1.defesa = 12;
 
 		}else if(i == 4)
 		{
 			strcpy(itens[i].equipamento.C1.nome, "Cathedral Knight");
-			itens[i].equipamentos.C1.defesa = 15;
+			itens[i].equipamento.C1.defesa = 15;
 
 			strcpy(itens[i].equipamento.C2.nome, "Cathedral Knight");
-			itens[i].equipamentos.C1.defesa = 15;
+			itens[i].equipamento.C1.defesa = 15;
 
 			strcpy(itens[i].equipamento.C3.nome, "Cathedral Knight");
-			itens[i].equipamentos.C1.defesa = 15;
+			itens[i].equipamento.C1.defesa = 15;
 
 		}else if(i == 5)
 		{
 			strcpy(itens[i].equipamento.C1.nome, "Cleric");
-			itens[i].equipamentos.C1.defesa = 18;
+			itens[i].equipamento.C1.defesa = 18;
 
 			strcpy(itens[i].equipamento.C2.nome, "Cleric");
-			itens[i].equipamentos.C1.defesa = 18;
+			itens[i].equipamento.C1.defesa = 18;
 
 			strcpy(itens[i].equipamento.C3.nome, "Cleric");
-			itens[i].equipamentos.C1.defesa = 18;
+			itens[i].equipamento.C1.defesa = 18;
 
 		}else if(i == 6)
 		{
