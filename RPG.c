@@ -70,8 +70,8 @@
 					- Inimigo:
 						* Nome: 
  						* PV = 20;
-						* Ataque = 5;
-						* defesa = 5;
+						* Ataque = 10;
+						* defesa = 10
 						* nivel = 2;
 						* Drop de Experiencia: randon 20 - 25;
 						* Drop de gold: randon de 10 - 20;			
@@ -79,9 +79,9 @@
  				* Fase (3):
 					- Inimigo:
 						* Nome: 
- 						* PV = 20;
-						* Ataque = 5;
-						* defesa = 5;
+ 						* PV = 25;
+						* Ataque = 15;
+						* defesa = 15;
 						* nivel = 3;
 						* Drop de Experiencia: randon 25 - 30;
 						* Drop de gold: randon de 10 - 20;
@@ -89,9 +89,9 @@
 				* Fase (4):
 					- Inimigo:
 						* Nome: 
- 						* PV = 20;
-						* Ataque = 5;
-						* defesa = 5;
+ 						* PV = 30;
+						* Ataque = 20;
+						* defesa = 15;
 						* nivel = 4;
 						* Drop de Experiencia: 30 - 35;
 						* Drop de gold: randon de 10 - 20;
@@ -99,9 +99,9 @@
 				* Fase (5):
 					- Inimigo:
 						* Nome: 
- 						* PV = 20;
-						* Ataque = 5;
-						* defesa = 5;
+ 						* PV = 40;
+						* Ataque = 30;
+						* defesa = 20;
 						* nivel = 5;
 						* Drop de Experiencia: 35 - 40;
 						* Drop de gold: randon de 10 - 20;
@@ -109,9 +109,9 @@
 				* Fase (6):
 					- Inimigo:
 						* Nome: 
- 						* PV = 20;
-						* Ataque = 5;
-						* defesa = 5;
+ 						* PV = 50;
+						* Ataque = 40;
+						* defesa = 30;
 						* nivel = 6;
 						* Drop de Experiencia: 40 - 45;
 						* Drop de gold: randon de 10 - 20;
@@ -119,9 +119,9 @@
 				* Fase (7):
 					- Inimigo:
 						* Nome: 
- 						* PV = 20;
-						* Ataque = 5;
-						* defesa = 5;
+ 						* PV = 60;
+						* Ataque = 50;
+						* defesa = 40;
 						* nivel = 7;
 						* Drop de Experiencia: 45 - 50;
 						* Drop de gold: randon de 10 - 20;
@@ -129,9 +129,9 @@
 				* Fase (8):
 					- Inimigo:
 						* Nome: 
- 						* PV = 20;
-						* Ataque = 5;
-						* defesa = 5;
+ 						* PV = 80;
+						* Ataque = 60;
+						* defesa = 50;
 						* nivel = 8;
 						* Drop de Experiencia: 50 - 65;
 						* Drop de gold: randon de 10 - 20;
@@ -139,9 +139,9 @@
 				* Fase (9):
 					- Inimigo:
 						* Nome: 
- 						* PV = 20;
-						* Ataque = 5;
-						* defesa = 5;
+ 						* PV = 90;
+						* Ataque = 70;
+						* defesa = 60;
 						* nivel = 9;
 						* Drop de Experiencia: 65 - 80;
 						* Drop de gold: randon de 10 - 20;
@@ -149,37 +149,88 @@
 				* Fase (10):
 					- Inimigo:
 						* Nome: 
- 						* PV = 20;
-						* Ataque = 5;
-						* defesa = 5;
+ 						* PV = 110;
+						* Ataque = 80;
+						* defesa = 80;
 						* nivel = 10;
 						* Drop de Experiencia: 80 - 95;
 						* Drop de gold: randon de 10 - 20;
 
 PENDENTE:
-	- Definir PV MAX
+		*** C ***
+	- Potion em porcentagem			-> OK
+	- Equipamentos
+	- Implementar loja
+	- Implementar escolha de inimigos
+	- Raridade dos equipamentos
+	- Lista de itens
+	- Sistema de salvamento			-> OK
+
+		*** HTML ***
+	- Menu do jogo
+	- implementar modelo de fase
+	- Implementar modelo dos inimigos e personagem principal
+	- Loja
+	- Itens
+	- Inventario
 
 */
 
 //Bibliotecas
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include <math.h>		//ceil() função teto
 
 //Contantes
 #define MAX_ITENS 7
-#define POTION 30	//Quantidade maxima que uma poção pode regenerar
-
+#define POTION 0.3		//Quantidade maxima que uma poção pode regenerar
+#define TOTAL_itens 20		//Total de itens
 
 //Structs
+
+//ARMADURA------------
+struct capacete{
+	char nome[40];
+	double defesa;
+	int gold;
+};
+
+struct peitoral{
+	char nome[40];
+	double defesa;
+	int gold;
+};
+
+struct bota{
+	char nome[40];
+	double defesa;
+	int gold;
+};
+
+//ARMA----------------
+struct espada{
+	char nome[40];
+	double ataque;
+	int gold;
+};
+
+struct arco{
+	char nome[40];
+	double ataque;
+	int gold;
+};
+
+//INVENTARIO---------------
 struct armadura{
-	int capacete;
-	int luva;
-	int peitoral;
-	int bota;
+	struct capacete C1;
+	struct peitoral C2;
+	struct bota C3;
 };
 
 struct arma{
-	int atk;
+	struct espada S1;
+	struct arco S2;
 };
 
 struct inventario{
@@ -187,19 +238,22 @@ struct inventario{
 	int potion;
 	
 	//Equipaveis
-	struct armadura usuario;
-	struct arma jogador;
+	struct armadura equipamento;
+	struct arma weapon;
 };
 
+//PERSONAGEM-------------
 struct personagem{
 	//Caracteristicas
 	char nome[100];
-	int PV;
-	int ataque;
-	int defesa;
+	double PV;
+	double ataque;
+	double defesa;
 	int xp;
 	int nivel;
 	int gold;
+
+	int fase;
 
 	struct inventario bag;
 };
@@ -211,7 +265,7 @@ void levelup(struct personagem *);
 void menu(struct personagem );
 void xp(struct personagem *, int);
 void menu_batalha(struct personagem, struct personagem);
-
+struct personagem carrega_dados(char *);
 
 
 
@@ -219,68 +273,104 @@ void menu_batalha(struct personagem, struct personagem);
 
 //Função principal
 int main(){
-	//Iniciando personagem base
-	struct personagem J1;
-	struct personagem J2;	
-	//Inicialização
-	int fase = 1;
-
+	//Inicializaçao
+	char *entrada = getenv("QUERY_STRING");	
+	
 	//Iniciando personagem
-	printf("Digite o nome do seu personagem: ");
-	fgets(J1.nome, sizeof J1.nome, stdin);
-	set_Personagem(&J1);
+	struct personagem J1;
+	J1 = carrega_dados(entrada);
+	strcpy(J1.nome, entrada);
 
-	printf("Digite o nome do seu personagem: ");
-	fgets(J2.nome, sizeof J2.nome, stdin);
-	set_Personagem(&J2);
-J1.bag.potion = 1;
-	//Mostra Personagem
-	imprime_personagem(J1);
-
-	menu_batalha(J1, J2);
-	//Iniciado as fases
-	/*
-	switch(fase)
-		case(1):
-
-		break;
-
-		case(2):
-
-		break;
-	*/
-
+	//HTML
+	printf("Content-Type:text/html;charset=UTF-8\n\n");
+	printf("<!DOCTYPE html>\n");
+	printf("<html>\n<head>\n<title>RPG</title>\n</head>\n<body>");
+		imprime_personagem(J1);
+	printf("</body>\n</html>\n");
+	
 	return 0;
+}
+
+/*
+Input: Um vetor de caracteres
+Output: struct do tipo personagem
+*/
+struct personagem carrega_dados(char *input)
+{
+	//Inicializaçao
+	struct personagem A;
+
+	//arquivo
+	FILE *arquivo = fopen(input, "rb");
+
+	if(arquivo == NULL)
+	{
+		//Criado novo jogo
+		arquivo = fopen(input, "wb");
+		
+		//Setando personagem
+		set_Personagem(&A);
+
+		//Gravando dados
+		fwrite(&A, sizeof(struct personagem), 1, arquivo);
+	}else{
+		//Lendo dados do personagem
+		fread(&A, sizeof(struct personagem), 1, arquivo);
+	}
+	
+	//Fechando arquivo
+	fclose(arquivo);
+
+	return A;
 }
 
 void set_Personagem(struct personagem *A)
 {
+	//ARMADURA
+	A->bag.equipamento.C1.defesa = 1;
+	A->bag.equipamento.C2.defesa = 1;
+	A->bag.equipamento.C3.defesa = 1;
+
+	//ARMA
+	A->bag.weapon.S1.ataque = 1;
+
+	//PERSONAGEM
 	A->PV = 20;
-	A->ataque = 5;
-	A->defesa = 5;
+	A->ataque = 5 + A->bag.weapon.S1.ataque;
+	A->defesa = 5 + A->bag.equipamento.C1.defesa + A->bag.equipamento.C2.defesa + A->bag.equipamento.C3.defesa;
 	A->xp = 0;
 	A->nivel = 1;
 	A->gold = 0;
+
+	A->fase = 1;
+
+	//INVENTARIO
+	A->bag.potion = 1;
 }
 
 void imprime_personagem(struct personagem A)
 {
-	printf("\nNome: %s", A.nome);
-	printf("Pontos de vida: %d\n", A.PV);
-	printf("Ataque: %d\n", A.ataque);
-	printf("Defesa: %d\n", A.defesa);
-	printf("Experiencia: %d\n", A.xp);
-	printf("Nivel: %d\n", A.nivel);
-	printf("Gold: %d\n", A.gold);
+	printf("<ul>");
+	printf("<li><b>Nome:</b> %s</li>", A.nome);
+	printf("<li><b>Pontos de vida:</b> %.0lf</li>", A.PV);
+	printf("<li><b>Ataque:</b> %.0lf</li>", A.ataque);
+	printf("<li><b>Defesa:</b> %.0lf</li>", A.defesa);
+	printf("<li><b>Experiencia:</b> %d</li>", A.xp);
+	printf("<li><b>Nivel:</b> %d</li>", A.nivel);
+	printf("<li><b>Gold:</b> %d</li>", A.gold);
+
+	//Inventario
+	printf("<li>Potion: %d</li>", A.bag.potion);
+	printf("</ul>");
 }
 
 void imprime_inimigo(struct personagem A)
 {
 	printf("\n	INIMIGO\n");
 	printf("\nNome: %s", A.nome);
-	printf("Pontos de vida: %d\n", A.PV);
-	printf("Ataque: %d\n", A.ataque);
-	printf("Defesa: %d\n", A.defesa);
+	printf("Pontos de vida: %.0lf\n", A.PV);
+	printf("Ataque: %.0lf\n", A.ataque);
+	printf("Defesa: %.0lf\n", A.defesa);
 	printf("Nivel: %d\n", A.nivel);	
 }
 
@@ -304,17 +394,6 @@ void menu(struct personagem A)
 		scanf("%d", &op);
 	}
 
-	/*
-	while(){
-		case(1):
-			
-		break;
-
-		case(2):
-
-		break;
-	}
-	*/
 }
 
 void levelup(struct personagem *A)
@@ -351,12 +430,9 @@ void imprime_pocoes(struct personagem A)
 */
 int usa_iten(int opcao, struct personagem *A)					//PENDENTE------------------------
 {
-	if(A->PV + POTION < 100)
-	{
-		A->PV = A->PV + POTION;
-		return 1;
-	}
-	return 0;
+	A->PV = A->PV + A->PV * POTION;
+
+	return 1;
 }
 
 void menu_batalha(struct personagem A, struct personagem inimigo)		//PENDENTE------------------------
@@ -391,7 +467,8 @@ void menu_batalha(struct personagem A, struct personagem inimigo)		//PENDENTE---
 
 				if(usa_iten(op_inventario, &A))
 				{
-					controle = 0;	
+					controle = 0;
+					A.bag.potion--;
 				}
 			}
 	
@@ -400,27 +477,164 @@ void menu_batalha(struct personagem A, struct personagem inimigo)		//PENDENTE---
 		//ATAQUE
 		if(controle == 1)
 		{
-			inimigo.PV = inimigo.PV - (A.ataque - ( inimigo.defesa/(100 + inimigo.defesa) ) * A.ataque);		//Dano considerando a defesa
+			inimigo.PV = inimigo.PV - (A.ataque - ((inimigo.defesa/(100 + inimigo.defesa)) * A.ataque)); //Dano considerando a defesa
 		}
 		
 		//Turno do inimigo
-		A.PV = A.PV - (inimigo.ataque - ( A.defesa/(100 + A.defesa) ) * inimigo.ataque);
+		A.PV = A.PV - (inimigo.ataque - ((A.defesa/(100 + A.defesa)) * inimigo.ataque));
 	
 	}while(inimigo.PV > 0 && A.PV > 0);
 }
 
-/*
-void fase(struct personagem A, struct personagem inimigo)	//PENDENTE-----------------------
+void loja(struct personagem *A)
 {
-	//Apresentação
-	printf("\n\n	***A BATALHA IRA COMEÇAR***\n\n");
-	imprime_inimigo(inimigo);
-	imprime_personagem(A);
-
-	//Iniciando a batalha
-	do{
-		menu_batalha(&A, &inimigo);
-	}while(inimigo->PV < 0 && A->PV < 0);
-
+	
 }
-*/
+
+
+void gerador_inimigo(){
+	
+	struct personagem chefes[12];
+	
+	int i, j = 0;
+	for(i = 0; i < 12; i++)
+	{
+		if(i == 0)
+		{
+			//Atributos base
+			chefes[i].PV = 20;
+			chefes[i].ataque = 5;
+			chefes[i].defesa = 5;
+			chefes[i].xp = rand() % 5;
+			chefes[i].nivel = i;
+			chefes[i].gold = rand() % 5;
+		}else{
+			chefes[i].PV += j;
+			chefes[i].ataque += j;
+			chefes[i].defesa += j;
+			chefes[i].xp = j + rand() % 20;
+			chefes[i].nivel = i;
+			chefes[i].gold = 2*j + rand() % 150;
+		}
+			//ESCALA
+		j += 12;
+	}
+}
+
+
+void gera_itens()
+{
+	struct inventario itens[TOTAL_itens];
+
+	int i = 0;
+	for(i = 0; i < TOTAL_itens; i++)
+	{
+		if(i == 0)
+		{
+			strcpy(itens[i].equipamento.C1.nome, "Leather");
+			itens[i].equipamentos.C1.defesa = 3;
+
+			strcpy(itens[i].equipamento.C2.nome,"Leather");
+			itens[i].equipamentos.C1.defesa = 3;
+
+			strcpy(itens[i].equipamento.C3.nome, "Leather");
+			itens[i].equipamentos.C1.defesa = 3;
+
+		}else if(i == 1)
+		{
+			strcpy(itens[i].equipamento.C1.nome, "Iron");
+			itens[i].equipamentos.C1.defesa = 6;
+
+			strcpy(itens[i].equipamento.C2.nome, "Iron");
+			itens[i].equipamentos.C1.defesa = 6;
+
+			strcpy(itens[i].equipamento.C3.nome, "Iron");
+			itens[i].equipamentos.C1.defesa = 6;
+
+		}else if(i == 2)
+		{
+			strcpy(itens[i].equipamento.C1.nome, "Thorns");
+			itens[i].equipamentos.C1.defesa = 9;
+
+			strcpy(itens[i].equipamento.C2.nome, "Thorns");
+			itens[i].equipamentos.C1.defesa = 9;
+
+			strcpy(itens[i].equipamento.C3.nome, "Thorns");
+			itens[i].equipamentos.C1.defesa = 9;
+
+		}else if(i == 3)
+		{
+			strcpy(itens[i].equipamento.C1.nome, "Black Knight");
+			itens[i].equipamentos.C1.defesa = 12;
+
+			strcpy(itens[i].equipamento.C2.nome, "Black Knight");
+			itens[i].equipamentos.C1.defesa = 12;
+
+			strcpy(itens[i].equipamento.C3.nome, "Black Knight");
+			itens[i].equipamentos.C1.defesa = 12;
+
+		}else if(i == 4)
+		{
+			strcpy(itens[i].equipamento.C1.nome, "Cathedral Knight");
+			itens[i].equipamentos.C1.defesa = 15;
+
+			strcpy(itens[i].equipamento.C2.nome, "Cathedral Knight");
+			itens[i].equipamentos.C1.defesa = 15;
+
+			strcpy(itens[i].equipamento.C3.nome, "Cathedral Knight");
+			itens[i].equipamentos.C1.defesa = 15;
+
+		}else if(i == 5)
+		{
+			strcpy(itens[i].equipamento.C1.nome, "Cleric");
+			itens[i].equipamentos.C1.defesa = 18;
+
+			strcpy(itens[i].equipamento.C2.nome, "Cleric");
+			itens[i].equipamentos.C1.defesa = 18;
+
+			strcpy(itens[i].equipamento.C3.nome, "Cleric");
+			itens[i].equipamentos.C1.defesa = 18;
+
+		}else if(i == 6)
+		{
+			strcpy(itens[i].weapon.S1.nome, "Espada quebrada");
+			itens[i].weapon.S1.ataque = 7;
+
+			strcpy(itens[i].weapon.S2.nome, "Arco Curto");
+			itens[i].weapon.S1.ataque = 7;
+
+		}else if(i == 7)
+		{
+			strcpy(itens[i].weapon.S1.nome, "Espada curta");
+			itens[i].weapon.S1.ataque = 14;
+
+			strcpy(itens[i].weapon.S2.nome, "Arco longo");
+			itens[i].weapon.S1.ataque = 14;
+
+		}else if(i == 8)
+		{
+			strcpy(itens[i].weapon.S1.nome, "Black Knight");
+			itens[i].weapon.S1.ataque = 21;
+
+			strcpy(itens[i].weapon.S2.nome, "Elfico");
+			itens[i].weapon.S1.ataque = 21;
+
+		}else if(i == 9)
+		{
+			strcpy(itens[i].weapon.S1.nome, "Cathedral Knight");
+			itens[i].weapon.S1.ataque = 30;
+
+			strcpy(itens[i].weapon.S2.nome, "Cathedral Knight");
+			itens[i].weapon.S1.ataque = 30;
+
+		}else if(i == 10)
+		{
+			strcpy(itens[i].weapon.S1.nome, "Cleric");
+			itens[i].weapon.S1.ataque = 50;
+
+			strcpy(itens[i].weapon.S2.nome, "Besta");
+			itens[i].weapon.S1.ataque = 50;
+
+		}
+	}
+}
