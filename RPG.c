@@ -159,11 +159,11 @@
 PENDENTE:
 		*** C ***
 	- Potion em porcentagem			-> OK
-	- Equipamentos				-> OK
+	- Equipamentos
 	- Implementar loja
 	- Implementar escolha de inimigos
 	- Raridade dos equipamentos
-	- Lista de itens			-> OK
+	- Lista de itens
 	- Sistema de salvamento			-> OK
 
 		*** HTML ***
@@ -185,7 +185,7 @@ PENDENTE:
 //Contantes
 #define MAX_ITENS 7
 #define POTION 0.3		//Quantidade maxima que uma poção pode regenerar
-#define TOTAL_itens 20		//Total de itens
+#define TOTAL_itens 10		//Total de itens
 
 //Structs
 
@@ -249,6 +249,7 @@ struct personagem{
 	double PV;
 	double ataque;
 	double defesa;
+	double PV_MAX;
 	int xp;
 	int nivel;
 	int gold;
@@ -262,7 +263,6 @@ struct personagem{
 void set_Personagem(struct personagem *);
 void imprime_personagem(struct personagem );
 void levelup(struct personagem *);
-void menu(struct personagem );
 void xp(struct personagem *, int);
 void menu_batalha(struct personagem, struct personagem);
 struct personagem carrega_dados(char *);
@@ -279,7 +279,6 @@ int main(){
 	//Iniciando personagem
 	struct personagem J1;
 	J1 = carrega_dados(entrada);
-	strcpy(J1.nome, entrada);
 
 	//HTML
 	printf("Content-Type:text/html;charset=UTF-8\n\n");
@@ -299,10 +298,11 @@ struct personagem carrega_dados(char *input)
 {
 	//Inicializaçao
 	struct personagem A;
+	strcpy(A.nome, input);
 
 	//arquivo
 	FILE *arquivo = fopen(input, "rb");
-
+	
 	if(arquivo == NULL)
 	{
 		//Criado novo jogo
@@ -336,6 +336,7 @@ void set_Personagem(struct personagem *A)
 
 	//PERSONAGEM
 	A->PV = 20;
+	A->PV_MAX = 20;
 	A->ataque = 5 + A->bag.weapon.S1.ataque;
 	A->defesa = 5 + A->bag.equipamento.C1.defesa + A->bag.equipamento.C2.defesa + A->bag.equipamento.C3.defesa;
 	A->xp = 0;
@@ -360,7 +361,7 @@ void imprime_personagem(struct personagem A)
 	printf("<li><b>Gold:</b> %d</li>", A.gold);
 
 	//Inventario
-	printf("<li>Potion: %d</li>", A.bag.potion);
+	printf("<li><b>Potion:</b> %d</li>", A.bag.potion);
 	printf("</ul>");
 }
 
@@ -374,31 +375,10 @@ void imprime_inimigo(struct personagem A)
 	printf("Nivel: %d\n", A.nivel);	
 }
 
-void menu(struct personagem A)
-{
-	//Inicializaçao
-	int op;
-	
-	//Opçoes
-	printf("\n	--MENU--\n");
-	printf("(1) - Ver status do personagem\n");
-	printf("(2) - \n");
-	printf("(3) - \n");
-	printf("(4) - Iniciar proxima fase\n\n");
-	
-	printf("Digite uma opção: ");
-	scanf("%d", &op);
-	
-	while(op < 1){
-		printf("Opção invalida!!! Digite novamente: ");
-		scanf("%d", &op);
-	}
-
-}
 
 void levelup(struct personagem *A)
 {
-	A->PV = A->PV + 5;		//PV + 5
+	A->PV_MAX = A->PV_MAX + 10;		//PV + 5
 	A->ataque = A->ataque + 5;	//ataque + 5
 	A->defesa = A->defesa + 5;	//defesa + 5
 	A->xp = 0;			//xp = 0
@@ -441,58 +421,51 @@ void menu_batalha(struct personagem A, struct personagem inimigo)		//PENDENTE---
 	printf("\n\n	***A BATALHA IRA COMEÇAR***\n\n");
 
 	//Iniciando a batalha
+	
+	imprime_inimigo(inimigo);
+	imprime_personagem(A);
+	
+	//Inicializaçoes
+	int op, op_inventario, controle = 1;			//opçoes do menu
+
+	//Menu de seleção
 	do{
-		imprime_inimigo(inimigo);
-		imprime_personagem(A);
-	
-		//Inicializaçoes
-		int op, op_inventario, controle = 1;			//opçoes do menu
+		printf("\n	**Opçoes**\n");
+		printf("(1) - Atacar	(2) - Inventario\n");
+		printf("Digite uma opção: ");
+		scanf("%d", &op);
 
-		//Menu de seleção
-		do{
-			printf("\n	**Opçoes**\n");
-			printf("(1) - Atacar	(2) - Inventario\n");
-			printf("Digite uma opção: ");
-			scanf("%d", &op);
-
-			if(op == 2)	//Inventario
-			{
-				imprime_pocoes(A);
-				printf("(0) - Voltar ou Item vazio\n");
-				printf("Digite o item desejado: ");
-		
-				do{
-					scanf("%d", &op_inventario);
-				}while(op_inventario < -1 && op_inventario > MAX_ITENS);		//Limite de intens no inventario é de 6
-
-				if(usa_iten(op_inventario, &A))
-				{
-					controle = 0;
-					A.bag.potion--;
-				}
-			}
-	
-		}while(op != 1 && controle != 0);
-	
-		//ATAQUE
-		if(controle == 1)
+		if(op == 2)	//Inventario
 		{
-			inimigo.PV = inimigo.PV - (A.ataque - ((inimigo.defesa/(100 + inimigo.defesa)) * A.ataque)); //Dano considerando a defesa
-		}
+			imprime_pocoes(A);
+			printf("(0) - Voltar ou Item vazio\n");
+			printf("Digite o item desejado: ");
 		
-		//Turno do inimigo
-		A.PV = A.PV - (inimigo.ataque - ((A.defesa/(100 + A.defesa)) * inimigo.ataque));
+			do{
+				scanf("%d", &op_inventario);
+			}while(op_inventario < -1 && op_inventario > MAX_ITENS);		//Limite de intens no inventario é de 6
+
+			if(usa_iten(op_inventario, &A))
+			{
+				controle = 0;
+				A.bag.potion--;
+			}
+		}
 	
-	}while(inimigo.PV > 0 && A.PV > 0);
+	}while(op != 1 && controle != 0);
+	
+	//ATAQUE
+	if(controle == 1)
+	{
+		inimigo.PV = inimigo.PV - (A.ataque - ((inimigo.defesa/(100 + inimigo.defesa)) * A.ataque)); //Dano considerando a defesa
+	}
+		
+	//Turno do inimigo
+	A.PV = A.PV - (inimigo.ataque - ((A.defesa/(100 + A.defesa)) * inimigo.ataque));
+	
 }
 
-void loja(struct personagem *A)
-{
-	
-}
-
-
-void gerador_inimigo(){
+struct personagem gerador_inimigo(){
 	
 	struct personagem chefes[12];
 	
@@ -516,9 +489,12 @@ void gerador_inimigo(){
 			chefes[i].nivel = i;
 			chefes[i].gold = 2*j + rand() % 150;
 		}
-			//ESCALA
+			
+		//FATOR DE ESCALONAMENTO
 		j += 12;
 	}
+
+	return *chefes;
 }
 
 
