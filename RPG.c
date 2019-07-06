@@ -159,11 +159,11 @@
 PENDENTE:
 		*** C ***
 	- Potion em porcentagem			-> OK
-	- Equipamentos
+	- Equipamentos				-> OK
 	- Implementar loja
 	- Implementar escolha de inimigos
 	- Raridade dos equipamentos
-	- Lista de itens
+	- Lista de itens			-> OK
 	- Sistema de salvamento			-> OK
 
 		*** HTML ***
