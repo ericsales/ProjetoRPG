@@ -281,13 +281,10 @@ void menu_batalha(struct personagem *A, struct personagem *inimigo)
 
 		A->PV = A->PV - (inimigo->ataque - ((A->defesa/(100 + A->defesa)) * inimigo->ataque));
 		
-		printf("%lf\n", A->PV);
-		printf("%s\n", A->nome);
-		
-		
-		//Gravando dados
-		FILE *arquivo = fopen(A->nome, "wb");
-		fwrite(&A, sizeof(struct personagem), 1, arquivo);
+		//Gravando Dados em aquivo	
+		struct personagem B = *A;
+		FILE *arquivo = fopen(B.nome, "wb");
+		fwrite(&B, sizeof(struct personagem), 1, arquivo);
 		fclose(arquivo);
 
 		//Recarregar a pag
@@ -307,13 +304,11 @@ void menu_batalha(struct personagem *A, struct personagem *inimigo)
 			A->nivel++;
 		}
 
-		//Gravando dados
-		FILE *arquivo = fopen(A->nome, "wb");
-
-		fwrite(&A, sizeof(struct personagem), 1, arquivo);
-
-		fclose(arquivo);
-			
+		//Gravando Dados em aquivo	
+		struct personagem B = *A;
+		FILE *arquivo = fopen(B.nome, "wb");
+		fwrite(&B, sizeof(struct personagem), 1, arquivo);
+		fclose(arquivo);			
 		
 		//REDIRECIONAR PARA O MENU
 	}
