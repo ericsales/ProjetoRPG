@@ -76,11 +76,13 @@ struct personagem{
 	struct inventario bag;
 };
 
+//Prototipos
 struct personagem carrega_dados(char *);
 struct personagem gerador_inimigo(int);
-void menu_batalha(struct personagem *, struct personagem *);
+void menu_batalha(struct personagem *, struct personagem *, char *);
 void imprime_personagem(struct personagem A);
 
+//Função principal
 int main(){
 	//Inicialização
 	char *entrada = getenv("QUERY_STRING");
@@ -89,62 +91,95 @@ int main(){
 	struct personagem J1;
 	J1 = carrega_dados(entrada);
 	imprime_personagem(J1);
-	//INICIANDO INIMIGOS
+	
+	//Inicia inimigo
 	struct personagem I;
 
-	I = gerador_inimigo(J1.fase);
+	char inimigo[100];
+	int i = 0, aux = 1;
+	
+	while(aux != 0)
+	{
+		if(J1.nome[i] == '\0')
+		{
+			inimigo[i] = J1.fase + 64;
+			inimigo[i + 1] = '\0';
+			aux = 0;
+		}else{
+			inimigo[i] = J1.nome[i];
+			i++;
+		}
+	}
 
+	//Carregando dados em arquivo
+	FILE *arq = fopen(inimigo, "rb");
+	
+	if(arq != NULL)
+	{
+		fread(&I, sizeof(struct personagem), 1, arq);
+	}else{
+		//INICIANDO INIMIGOS
+		I = gerador_inimigo(J1.fase);
+		arq = fopen(inimigo, "wb");
+		fwrite(&I, sizeof(struct personagem), 1, arq);
+	}
+
+	fclose(arq);
+	
+	
 	//Iniciando batalha
 	switch (J1.fase)
 	{
 		//FASE (1)
 		case 1:
-			menu_batalha(&J1, &I);
+			//Iniciando fase
+			imprime_personagem(I);
+			menu_batalha(&J1, &I, inimigo);
 		break;
 
 		//FASE (2)
 		case 2:
-			menu_batalha(&J1, &I);
+			menu_batalha(&J1, &I, inimigo);
 		break;
 		
 		//FASE (3)
 		case 3:
-			menu_batalha(&J1, &I);
+			menu_batalha(&J1, &I, inimigo);
 		break;
 		
 		//FASE (4)
 		case 4:
-			menu_batalha(&J1, &I);
+			menu_batalha(&J1, &I, inimigo);
 		break;
 
 		//FASE (5)
 		case 5:
-			menu_batalha(&J1, &I);
+			menu_batalha(&J1, &I, inimigo);
 		break;
 
 		//FASE (6)
 		case 6:
-			menu_batalha(&J1, &I);
+			menu_batalha(&J1, &I, inimigo);
 		break;
 
 		//FASE (7)
 		case 7:
-			menu_batalha(&J1, &I);
+			menu_batalha(&J1, &I, inimigo);
 		break;
 
 		//FASE (8)
 		case 8:
-			menu_batalha(&J1, &I);
+			menu_batalha(&J1, &I, inimigo);
 		break;
 
 		//FASE (9)
 		case 9:
-			menu_batalha(&J1, &I);
+			menu_batalha(&J1, &I, inimigo);
 		break;
 
 		//FASE (10)
 		case 10:
-			menu_batalha(&J1, &I);
+			menu_batalha(&J1, &I, inimigo);
 		break;
 	}
 	return 0;
@@ -190,16 +225,16 @@ struct personagem gerador_inimigo(int p)
 			chefes[i].PV = 20 + i;
 			chefes[i].ataque = 5 + i;
 			chefes[i].defesa = 5 + i;
-			chefes[i].xp = rand() % 5;
+			chefes[i].xp = 5 + rand() % 10;
 			chefes[i].nivel = 1;
-			chefes[i].gold = 30 + rand() % 15;
+			chefes[i].gold = (i+5)*(i+5) + rand() % ((i+5)*(i+5)*3);
 		}else{
 			chefes[i].PV += j;
 			chefes[i].ataque += j;
 			chefes[i].defesa += j;
-			chefes[i].xp = j + rand() % 5;
+			chefes[i].xp = j + rand() % 10;
 			chefes[i].nivel = i + 1;
-			chefes[i].gold = 2*j + rand() % 150;
+			chefes[i].gold = (i+5)*(i+5) + rand() % ((i+5)*(i+5)*3);
 		}
 
 		if(i == 3)
@@ -255,10 +290,9 @@ void imprime_inimigo(struct personagem A)
 	printf("<li><b>Nivel:</b> %d</li>", A.nivel);
 }
 
-void menu_batalha(struct personagem *A, struct personagem *inimigo)
+void menu_batalha(struct personagem *A, struct personagem *inimigo, char *ini)
 {
 	printf("%s", A->nome);
-
 
 	if(A->PV > 0 || inimigo->PV > 0)
 	{
@@ -286,6 +320,12 @@ void menu_batalha(struct personagem *A, struct personagem *inimigo)
 		FILE *arquivo = fopen(B.nome, "wb");
 		fwrite(&B, sizeof(struct personagem), 1, arquivo);
 		fclose(arquivo);
+
+		//Gravando dados Inimigo em arquivo
+		struct personagem iniA = *inimigo;
+		FILE *arq = fopen(ini, "wb");
+		fwrite(&iniA, sizeof(struct personagem), 1, arq);
+		fclose(arq);
 
 		//Recarregar a pag
 	}else{
