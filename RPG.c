@@ -180,7 +180,6 @@ PENDENTE:
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <math.h>		//ceil() função teto
 
 //Contantes
 #define MAX_ITENS 7
@@ -274,7 +273,8 @@ struct personagem carrega_dados(char *);
 //Função principal
 int main(){
 	//Inicializaçao
-	char *entrada = getenv("QUERY_STRING");	
+	char *entrada = getenv("QUERY_STRING");
+	char in[400];	
 	
 	//Iniciando personagem
 	struct personagem J1;
@@ -415,6 +415,7 @@ int usa_iten(int opcao, struct personagem *A)					//PENDENTE--------------------
 	return 1;
 }
 
+/*
 void menu_batalha(struct personagem A, struct personagem inimigo)		//PENDENTE------------------------
 {
 	//Apresentação
@@ -464,6 +465,7 @@ void menu_batalha(struct personagem A, struct personagem inimigo)		//PENDENTE---
 	A.PV = A.PV - (inimigo.ataque - ((A.defesa/(100 + A.defesa)) * inimigo.ataque));
 	
 }
+*/
 
 struct personagem gerador_inimigo(){
 	
